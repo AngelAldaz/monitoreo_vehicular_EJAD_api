@@ -14,3 +14,8 @@ def get_db():
     yield db
   finally:
     db.close()
+    
+    
+# Añade esto al final de database.py
+def create_tables():
+    Base.metadata.create_all(bind=engine)
