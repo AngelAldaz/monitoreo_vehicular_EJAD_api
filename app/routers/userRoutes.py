@@ -156,7 +156,7 @@ async def login(
     
     access_token_expires = timedelta(minutes=int(ACCESS_TOKEN_EXPIRE_MINUTES))
     access_token = service.create_access_token(
-        data={"sub": user.email}, expires_delta=access_token_expires
+        data={"sub": user.id_usuario}, expires_delta=access_token_expires
     )
     
     return {"access_token": access_token}

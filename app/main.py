@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.config import PALABRA_SECRETA
+from app.utils.iaUtil import manejar_pregunta
 from app.database import create_tables
 from app.routers import vehicleRoutes
 
@@ -32,3 +32,7 @@ app.add_middleware(
 @app.get("/")
 def root():
   return {"message": "Hello World"}
+
+@app.post("/chat-bot")
+def chat_bot(message: str):
+  return manejar_pregunta(message)
