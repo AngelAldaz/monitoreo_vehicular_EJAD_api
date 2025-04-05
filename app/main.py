@@ -2,7 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import PALABRA_SECRETA
 from app.database import create_tables
+
 from app.routers import roleRoutes
+
 
 app = FastAPI()
 app.include_router(roleRoutes.router)
