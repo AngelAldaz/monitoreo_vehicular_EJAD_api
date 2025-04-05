@@ -65,7 +65,7 @@ async def list_vehicles(
 )
 async def update_vehicle(
     vehicle_id: int,
-    vehicle_data: vehiclesSchema.VehicleCreate = Body(..., example={"number_plate": "ABC123", "serial_number": "1234567890", "year": 2020, "color": "Red", "km": 10000, "km_per_litre": 10, "id_model_fk": 1, "id_description_fk": 1, "id_brand_fk": 1}),
+    vehicle_data: vehiclesSchema.VehicleUpdate = Body(..., example={"number_plate": "ABC123", "serial_number": "1234567890", "year": 2020, "color": "Red", "km": 10000, "km_per_litre": 10, "id_model_fk": 1, "id_description_fk": 1, "id_brand_fk": 1}),
     service: vehicleService.VehicleService = Depends(get_vehicle_service)
 ):
     updated_vehicle = service.update_vehicle(vehicle_id, vehicle_data)
