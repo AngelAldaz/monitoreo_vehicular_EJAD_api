@@ -31,7 +31,7 @@ def manejar_pregunta(pregunta):
 
         try:
             conn = pymysql.connect(
-                host="db",
+                host="aaaimx.org",
                 user= MYSQL_USER,
                 password= MYSQL_PASSWORD,
                 database= MYSQL_DATABASE,
