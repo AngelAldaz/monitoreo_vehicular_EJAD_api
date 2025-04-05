@@ -20,7 +20,8 @@ class FuelStop(Base):
     Latitude_start = Column(String(255), nullable=True)
     Longitude_start = Column(String(255), nullable=True)
     
-   
+    current_km = Column(Integer, nullable=True)
+    image_km = Column(String(255), nullable=True)
     
     liters_added = Column(DECIMAL(5, 2), nullable=False)
 

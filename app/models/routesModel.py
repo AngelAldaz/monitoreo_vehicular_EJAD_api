@@ -24,6 +24,7 @@ class Route(Base):
 
     start_km = Column(Integer, nullable=True)
     end_km = Column(Integer, nullable=True)
+    total_km = Column(Integer, nullable=True)
     estimated_km = Column(Integer, nullable=True)
     image_start_km = Column(String(255), nullable=True)  # Ruta de la imagen
     image_end_km = Column(String(255), nullable=True)  # Ruta de la imagen
