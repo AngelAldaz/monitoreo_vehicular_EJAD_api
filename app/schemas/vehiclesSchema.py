@@ -26,6 +26,8 @@ class VehicleOut(VehicleBase):
     name_model: Optional[str] = None
     name_description: Optional[str] = None
     name_brand: Optional[str] = None
+    route_status: Optional[vehicleRoute] = None
+    assignment_status: Optional[VehicleAssignmentStatus] = None
 
     class Config:
         from_attributes = True

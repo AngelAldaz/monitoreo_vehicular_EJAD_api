@@ -1,0 +1,1 @@
+# Este archivo permite que el directorio scripts sea reconocido como un paquete Python 

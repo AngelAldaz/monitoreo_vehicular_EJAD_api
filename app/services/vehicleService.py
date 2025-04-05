@@ -56,7 +56,9 @@ class VehicleService:
         id_brand_fk=db_vehicle.id_brand_fk,
         name_model=db_vehicle.model.name if db_vehicle.model else None,
         name_description=db_vehicle.description.name if db_vehicle.description else None,
-        name_brand=db_vehicle.brand.name if db_vehicle.brand else None
+        name_brand=db_vehicle.brand.name if db_vehicle.brand else None,
+        route_status=db_vehicle.route_status,
+        assignment_status=db_vehicle.assignment_status
       )
     return None
 
