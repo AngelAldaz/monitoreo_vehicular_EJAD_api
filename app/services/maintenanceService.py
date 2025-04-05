@@ -9,7 +9,7 @@ class MaintenanceService:
       
   def create_maintenance(self, maintenance: MaintenanceCreate) -> MaintenanceOut:
     db_maintenance = Maintenance(
-      # id_vehicle_fk=maintenance.id_vehicle_fk,
+      id_vehicle_fk=maintenance.id_vehicle_fk,
       description=maintenance.description,
       start_time=maintenance.start_time,
       estimated_time=maintenance.estimated_time,
@@ -19,7 +19,7 @@ class MaintenanceService:
     created_maintenance = self.repo.create_maintenance(db_maintenance)
     return MaintenanceOut(
       id_maintenance=created_maintenance.id_maintenance,
-      # id_vehicle_fk=created_maintenance.id_vehicle_fk,
+      id_vehicle_fk=created_maintenance.id_vehicle_fk,
       description=created_maintenance.description,
       start_time=created_maintenance.start_time,
       estimated_time=created_maintenance.estimated_time,
@@ -32,7 +32,7 @@ class MaintenanceService:
     if db_maintenance:
       return MaintenanceOut(
         id_maintenance=db_maintenance.id_maintenance,
-        # id_vehicle_fk=db_maintenance.id_vehicle_fk,
+        id_vehicle_fk=db_maintenance.id_vehicle_fk,
         description=db_maintenance.description,
         start_time=db_maintenance.start_time,
         estimated_time=db_maintenance.estimated_time,
@@ -45,7 +45,7 @@ class MaintenanceService:
     return [
       MaintenanceOut(
         id_maintenance=m.id_maintenance,
-        # id_vehicle_fk=m.id_vehicle_fk,
+        id_vehicle_fk=m.id_vehicle_fk,
         description=m.description,
         start_time=m.start_time,
         estimated_time=m.estimated_time,
@@ -65,11 +65,13 @@ class MaintenanceService:
         db_maintenance.end_time = maintenance.end_time
       if maintenance.status is not None:
         db_maintenance.status = maintenance.status
+      if maintenance.id_vehicle_fk is not None:
+        db_maintenance.id_vehicle_fk = maintenance.id_vehicle_fk
           
       updated_maintenance = self.repo.update_maintenance(db_maintenance)
       return MaintenanceOut(
         id_maintenance=updated_maintenance.id_maintenance,
-        # id_vehicle_fk=updated_maintenance.id_vehicle_fk,
+        id_vehicle_fk=updated_maintenance.id_vehicle_fk,
         description=updated_maintenance.description,
         start_time=updated_maintenance.start_time,
         estimated_time=updated_maintenance.estimated_time,
@@ -88,7 +90,21 @@ class MaintenanceService:
     return [
       MaintenanceOut(
         id_maintenance=m.id_maintenance,
-        # id_vehicle_fk=m.id_vehicle_fk,
+        id_vehicle_fk=m.id_vehicle_fk,
+        description=m.description,
+        start_time=m.start_time,
+        estimated_time=m.estimated_time,
+        end_time=m.end_time,
+        status=m.status
+      ) for m in db_maintenances
+    ]
+  
+  def get_all_maintenances_by_vehicle(self, vehicle_id: int) -> List[MaintenanceOut]:
+    db_maintenances = self.repo.get_all_maintenances_by_vehicle(vehicle_id)
+    return [
+      MaintenanceOut(
+        id_maintenance=m.id_maintenance,
+        id_vehicle_fk=m.id_vehicle_fk,
         description=m.description,
         start_time=m.start_time,
         estimated_time=m.estimated_time,

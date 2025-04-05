@@ -20,6 +20,7 @@ class MaintenanceBase(BaseModel):
   estimated_time: time
   end_time: Optional[datetime] = None
   status: MaintenanceStatus
+  id_vehicle_fk: int
 
 class MaintenanceCreate(MaintenanceBase):
   pass

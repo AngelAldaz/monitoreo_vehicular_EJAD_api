@@ -18,6 +18,9 @@ class MaintenanceRepository:
   def get_all_maintenances(self) -> List[Maintenance]:
     return self.db.query(Maintenance).all()
   
+  def get_all_maintenances_by_vehicle(self, vehicle_id: int) -> List[Maintenance]:
+    return self.db.query(Maintenance).filter(Maintenance.id_vehicle_fk == vehicle_id).all()
+  
   def update_maintenance(self, maintenance: Maintenance) -> Maintenance:
     self.db.merge(maintenance)
     self.db.commit()

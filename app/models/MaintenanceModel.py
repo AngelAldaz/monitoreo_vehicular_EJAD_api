@@ -12,7 +12,7 @@ class Maintenance(Base):
 
     # Campos
     id_maintenance = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    # id_vehicle_fk = Column(Integer, ForeignKey("Vehicle.id_vehicle"), nullable=False)
+    id_vehicle_fk = Column(Integer, ForeignKey("Vehicle.id_vehicle"), nullable=False)
     
     description = Column(Text, nullable=True)
     

@@ -138,3 +138,17 @@ async def delete_maintenance(
       detail="Maintenance not found"
     )
   return None
+
+@router.get(
+  "/vehicle/{vehicle_id}",
+  response_model=List[MaintenanceOut],
+  summary="Get maintenances by vehicle ID"
+)
+async def list_maintenances_by_vehicle(
+  vehicle_id: int,
+  service: MaintenanceService = Depends(get_maintenance_service)
+):
+  """
+  Retrieve maintenance records filtered by vehicle ID.
+  """
+  return service.get_all_maintenances_by_vehicle(vehicle_id)
