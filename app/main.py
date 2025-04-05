@@ -3,6 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import PALABRA_SECRETA
 from app.database import create_tables
 from app.models.rolesModel import Role 
+from app.models.brandsModel import Brand
+from app.models.modelsModel import Model
+from app.models.descriptionsModel import Description
 
 app = FastAPI()
 
