@@ -13,4 +13,3 @@ class Description(Base):
     id_model_fk = Column(Integer, ForeignKey("Model.id_model"), nullable=False)
     
     model = relationship("Model", back_populates="descriptions")
-
