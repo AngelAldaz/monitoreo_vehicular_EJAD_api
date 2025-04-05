@@ -7,6 +7,7 @@ from app.repositories.userRepository import UserRepository
 from app.database import get_db
 from datetime import timedelta
 from app.config import ACCESS_TOKEN_EXPIRE_MINUTES
+from app.models.usersModel import User
 
 router = APIRouter(
     prefix="/users",
@@ -156,17 +157,25 @@ async def login(
     
     access_token_expires = timedelta(minutes=int(ACCESS_TOKEN_EXPIRE_MINUTES))
     access_token = service.create_access_token(
-        data={"sub": user.id_usuario}, expires_delta=access_token_expires
+        data={"sub": user.email, "user_id": user.id_usuario}, expires_delta=access_token_expires
     )
     
     return {"access_token": access_token}
 
 # Ejemplo de ruta protegida
-# @router.get("/me/", response_model=UserOut)
-# async def read_users_me(
-#     current_user: User = Depends(get_user_service().get_current_user)
-# ):
-#     """
-#     Get current user details (protected route).
-#     """
-#     return current_user
+@router.get("/me/", response_model=UserOut)
+async def read_users_me(
+    service: UserService = Depends(get_user_service),
+    current_user: User = Depends(lambda s=Depends(get_user_service): s.get_current_user)
+):
+    """
+    Get current user details (protected route).
+    """
+    return UserOut(
+        id_usuario=current_user.id_usuario,
+        first_name=current_user.first_name,
+        last_name=current_user.last_name,
+        email=current_user.email,
+        id_role_fk=current_user.id_role_fk,
+        id_vehicle_fk=current_user.id_vehicle_fk
+    )

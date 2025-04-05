@@ -16,6 +16,7 @@ class UserOut(UserBase):
 
   class Config:
     from_attributes = True
+    exclude_none = True
 
 class UserLogin(BaseModel):
   email: EmailStr
@@ -26,6 +27,7 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: Optional[str] = None
+    user_id: Optional[int] = None
     
 class UserUpdate(BaseModel):
   first_name: Optional[str] = None
