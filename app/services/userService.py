@@ -23,7 +23,7 @@ class UserService:
       last_name=user.last_name,
       email=user.email,
       password=hashed_password,
-      id_role_fk=user.id_role_fk,
+      id_role_fk=2
     )
     created_user = self.repo.create_user(db_user)
     return UserOut(
