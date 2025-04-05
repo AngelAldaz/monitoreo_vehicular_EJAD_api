@@ -3,6 +3,7 @@ from typing import List
 import app.schemas.routesSchema as routesSchema
 import app.services.routeService as routeService
 import app.repositories.routeRepository as routeRepository
+import app.repositories.vehicleRepository as vehicleRepository
 from app.database import get_db
 from sqlalchemy.orm import Session
 
@@ -14,7 +15,8 @@ router = APIRouter(
 
 def get_route_service(db: Session = Depends(get_db)):
     repo = routeRepository.RouteRepository(db)
-    return routeService.RouteService(repo)
+    vehicle_repo = vehicleRepository.VehicleRepository(db)
+    return routeService.RouteService(repo, vehicle_repo)
 
 
 @router.post(
@@ -87,3 +89,38 @@ async def delete_route(
     if not service.delete_route(route_id):
         raise HTTPException(status_code=404, detail="Route not found")
     return None
+
+@router.post(
+    "/start",
+    response_model=routesSchema.RouteStartResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Start a new route",
+    response_description="The started route"
+)
+async def start_route(
+    route_data: routesSchema.RouteStartSchema = Body(..., example={
+        "id_vehicle_fk": 1, 
+        "id_user_fk": 1, 
+        "latitude_start": 12.345678, 
+        "longitude_start": 98.765432, 
+        "start_time": "2023-01-01T08:00:00Z", 
+        "start_km": 10000, 
+        "image_start_km": "path/to/image.jpg",
+        "description": "Route in progress"
+    }),
+    service: routeService.RouteService = Depends(get_route_service)
+):
+    """
+    Start a new route with the following details:
+    - **id_vehicle_fk**: ID of the vehicle
+    - **id_user_fk**: ID of the user (driver)
+    - **latitude_start**: Starting latitude
+    - **longitude_start**: Starting longitude
+    - **start_time**: Time when the route starts
+    - **start_km**: Current vehicle odometer reading
+    - **image_start_km**: Path to the image of the odometer
+    - **description**: Optional description (defaults to "Route in progress")
+    
+    This will also change the vehicle's status to ON_ROUTE.
+    """
+    return service.start_route(route_data)

@@ -31,6 +31,14 @@ class Route(Base):
     
     liters_consumed = Column(Double, nullable=False)
     
+    
+    
+    
+    
+    
+    
+    
+    
     vehicle = relationship("Vehicle", back_populates="routes")
     user = relationship("User", back_populates="routes")
     fuel_stops = relationship("FuelStop", back_populates="route")

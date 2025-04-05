@@ -1,11 +1,15 @@
 from typing import Optional, Union
-from app.schemas.routesSchema import RouteCreate, RouteOut
+from app.schemas.routesSchema import RouteCreate, RouteOut, RouteStartSchema, RouteStartResponse
 from app.repositories.routeRepository import RouteRepository
+from app.repositories.vehicleRepository import VehicleRepository
 from app.models.routesModel import Route
+from app.models.vehicleRoute import vehicleRoute
+from datetime import datetime, timedelta
 
 class RouteService:
-    def __init__(self, route_repo: RouteRepository) -> None:
+    def __init__(self, route_repo: RouteRepository, vehicle_repo: VehicleRepository = None) -> None:
         self.repo = route_repo
+        self.vehicle_repo = vehicle_repo
 
     def _to_bool(self, value: Union[bool, int]) -> bool:
         """Convierte valores enteros a booleanos (0 = False, cualquier otro número = True)."""
@@ -179,6 +183,65 @@ class RouteService:
         if db_route is not None:
             return self.repo.delete_route(db_route)
         return False
+    
+    def start_route(self, route_start: RouteStartSchema) -> RouteStartResponse:
+        """
+        Start a new route with minimal information and set vehicle status to ON_ROUTE
+        
+        Args:
+            route_start: Basic information to start a route
+            
+        Returns:
+            A RouteStartResponse with the created route information
+        """
+        # Create a new route with default values for required fields
+        estimated_time = 0.0  # Default value
+        end_time = route_start.start_time + timedelta(hours=8)  # Default end time (8 hours later)
+        
+        db_route = Route(
+            id_vehicle_fk=route_start.id_vehicle_fk,
+            id_user_fk=route_start.id_user_fk,
+            description=route_start.description,
+            latitude_start=self._to_str(route_start.latitude_start),
+            longitude_start=self._to_str(route_start.longitude_start),
+            latitude_end="0",  # Default value
+            longitude_end="0",  # Default value
+            start_time=route_start.start_time,
+            end_time=end_time,
+            estimated_time=estimated_time,
+            total_duration=0.0,  # Default value
+            on_time=False,  # Default value
+            start_km=route_start.start_km,
+            end_km=0,  # Default value
+            estimated_km=0,  # Default value 
+            image_start_km=route_start.image_start_km,
+            image_end_km="",  # Default value
+            on_distance=False,  # Default value
+            liters_consumed=0.0  # Default value
+        )
+        
+        created_route = self.repo.create_route(db_route)
+        
+        # Update vehicle status to ON_ROUTE if vehicle_repo is provided
+        if self.vehicle_repo and created_route:
+            vehicle = self.vehicle_repo.get_vehicle_by_id(route_start.id_vehicle_fk)
+            if vehicle:
+                vehicle.route_status = vehicleRoute.ON_ROUTE
+                self.vehicle_repo.update_vehicle(vehicle)
+        
+        return RouteStartResponse(
+            id_route=created_route.id_route,
+            id_vehicle_fk=created_route.id_vehicle_fk,
+            id_user_fk=created_route.id_user_fk,
+            description=created_route.description,
+            latitude_start=created_route.latitude_start,
+            longitude_start=created_route.longitude_start,
+            start_time=created_route.start_time,
+            start_km=created_route.start_km,
+            image_start_km=created_route.image_start_km,
+            name_vehicle=created_route.vehicle.number_plate if created_route.vehicle else None,
+            name_user=created_route.user.first_name if created_route.user else None
+        )
     
                 
             
