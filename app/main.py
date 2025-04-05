@@ -2,9 +2,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import PALABRA_SECRETA
 from app.database import create_tables
-from app.models.rolesModel import Role 
+from app.routers import roleRoutes
 
 app = FastAPI()
+app.include_router(roleRoutes.router)
 
 # Llama a la función al iniciar
 create_tables()
@@ -21,7 +22,3 @@ app.add_middleware(
 @app.get("/")
 def root():
   return {"message": "Hello World"}
-
-@app.get("/secreto")
-def secreto():
-  return {"message": PALABRA_SECRETA}
