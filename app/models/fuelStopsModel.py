@@ -8,7 +8,7 @@ class FuelStop(Base):
     __tablename__ = "FuelStop"
 
     id_fuel_stop = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    id_route_fk = Column(Integer, ForeignKey("Route.id_traysctoria"), nullable=False)
+    id_route_fk = Column(Integer, ForeignKey("Route.id_route"), nullable=False)
     
     Latitude_stop = Column(String(255), nullable=False)
     Longitude_stop = Column(String(255), nullable=False)
@@ -30,4 +30,4 @@ class FuelStop(Base):
     # Propiedad para obtener información de la ruta relacionada
     @hybrid_property
     def route_name(self):
-        return self.route.name if self.route else None 
+        return self.route.description if self.route else None 

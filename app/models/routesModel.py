@@ -7,15 +7,14 @@ class Route(Base):
 
     id_route = Column(Integer, primary_key=True, index=True, autoincrement=True)
     id_vehicle_fk = Column(Integer, ForeignKey("Vehicle.id_vehicle"), nullable=False)
-    
+    id_user_fk = Column(Integer, ForeignKey("User.id_usuario"), nullable=False)
     description = Column(String(255), nullable=False)
    
+    latitude_start = Column(String(50), nullable=True)
+    longitude_start = Column(String(50), nullable=True)
     
-    Latitude_start = Column(String(255), nullable=True)
-    Longitude_start = Column(String(255), nullable=True)
-    
-    Latitude_end = Column(String(255), nullable=True)
-    Longitude_end = Column(String(255), nullable=True)
+    latitude_end = Column(String(50), nullable=True)
+    longitude_end = Column(String(50), nullable=True)
     
     start_time = Column(DateTime, nullable=False)
     end_time = Column(DateTime, nullable=False)
@@ -25,20 +24,18 @@ class Route(Base):
 
     start_km = Column(Integer, nullable=False)
     end_km = Column(Integer, nullable=False)
-    stimated_km = Column(Integer, nullable=False)
+    estimated_km = Column(Integer, nullable=False)
     image_start_km = Column(String(255), nullable=True)  # Ruta de la imagen
     image_end_km = Column(String(255), nullable=True)  # Ruta de la imagen
     on_distance = Column(Boolean)
     
-    Latitude_start = Column(String(255), nullable=True)
-    Longitude_star = Column(String(255), nullable=True)
-    
-    
     liters_consumed = Column(Double, nullable=False)
     
-    id_vehicle_fk = Column(Integer, ForeignKey("Vehicle.id_vehicle"), nullable=False)
-    id_lider_fk= Column(Integer, ForeignKey("User.id_user"), nullable=False)
+    vehicle = relationship("Vehicle", back_populates="routes")
+    user = relationship("User", back_populates="routes")
+    fuel_stops = relationship("FuelStop", back_populates="route")
     
+
     
     
     
