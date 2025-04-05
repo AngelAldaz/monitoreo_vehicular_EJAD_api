@@ -16,20 +16,20 @@ class Route(Base):
     latitude_end = Column(String(50), nullable=True)
     longitude_end = Column(String(50), nullable=True)
     
-    start_time = Column(DateTime, nullable=False)
-    end_time = Column(DateTime, nullable=False)
-    estimated_time = Column(Double, nullable=False)
-    total_duration = Column(Double, nullable=False)
+    start_time = Column(DateTime, nullable=True)
+    end_time = Column(DateTime, nullable=True)
+    estimated_time = Column(Double, nullable=True)
+    total_duration = Column(Double, nullable=True)
     on_time = Column(Boolean)
 
-    start_km = Column(Integer, nullable=False)
-    end_km = Column(Integer, nullable=False)
-    estimated_km = Column(Integer, nullable=False)
+    start_km = Column(Integer, nullable=True)
+    end_km = Column(Integer, nullable=True)
+    estimated_km = Column(Integer, nullable=True)
     image_start_km = Column(String(255), nullable=True)  # Ruta de la imagen
     image_end_km = Column(String(255), nullable=True)  # Ruta de la imagen
     on_distance = Column(Boolean)
     
-    liters_consumed = Column(Double, nullable=False)
+    liters_consumed = Column(Double, nullable=True)
     
     
     
