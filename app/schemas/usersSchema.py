@@ -25,7 +25,7 @@ class Token(BaseModel):
     access_token: str
 
 class TokenData(BaseModel):
-    email: str | None = None
+    email: Optional[str] = None
     
 class UserUpdate(BaseModel):
   first_name: Optional[str] = None
