@@ -32,8 +32,8 @@ class Vehicle(Base):
     description = relationship("Description", back_populates="vehicles")
     brand = relationship("Brand", back_populates="vehicles")
     
-    route_status = Column(Enum(vehicleRoute), default=vehicleRoute.OFF_ROUTE)
-    assignment_status = Column(Enum(VehicleAssignmentStatus), default=VehicleAssignmentStatus.NOT_ASSIGNED)
+    route_status = Column(Enum(vehicleRoute, create_constraint=True, native_enum=False), default=vehicleRoute.OFF_ROUTE)
+    assignment_status = Column(Enum(VehicleAssignmentStatus, create_constraint=True, native_enum=False), default=VehicleAssignmentStatus.NOT_ASSIGNED)
 
     
     

@@ -1,10 +1,7 @@
 from typing import Optional
-from app.schemas.vehiclesSchema import VehicleCreate, VehicleOut
+from app.schemas.vehiclesSchema import VehicleCreate, VehicleOut, VehicleUpdate
 from app.repositories.vehicleRepository import VehicleRepository
 from app.models.vehiclesModel import Vehicle
-from app.models.modelsModel import Model
-from app.models.brandsModel import Brand
-from app.models.descriptionsModel import Description
 
 class VehicleService:
   def __init__(self, vehicle_repo: VehicleRepository) -> None:
@@ -79,18 +76,28 @@ class VehicleService:
       ) for vehicle in db_vehicles
     ]
 
-  def update_vehicle(self, vehicle_id: int, vehicle: VehicleCreate) -> Optional[VehicleOut]:
+  def update_vehicle(self, vehicle_id: int, vehicle: VehicleUpdate) -> Optional[VehicleOut]:
+  #   number_plate: Optional[str] = None
+  # year: Optional[int] = None
+  # color: Optional[str] = None
+  # km: Optional[int] = None
+  # route_status: Optional[vehicleRoute] = None
+  # assignment_status: Optional[VehicleAssignmentStatus] = None
     db_vehicle = self.repo.get_vehicle_by_id(vehicle_id)
-    if db_vehicle is not None:
-      db_vehicle.number_plate = vehicle.number_plate
-      db_vehicle.serial_number = vehicle.serial_number
-      db_vehicle.year = vehicle.year
-      db_vehicle.color = vehicle.color
-      db_vehicle.km = vehicle.km
-      db_vehicle.km_per_litre = vehicle.km_per_litre
-      db_vehicle.id_model_fk = vehicle.id_model_fk
-      db_vehicle.id_description_fk = vehicle.id_description_fk
-      db_vehicle.id_brand_fk = vehicle.id_brand_fk
+    if db_vehicle:
+      if vehicle.number_plate is not None:
+        db_vehicle.number_plate = vehicle.number_plate
+      if vehicle.year is not None:
+        db_vehicle.year = vehicle.year
+      if vehicle.color is not None:
+        db_vehicle.color = vehicle.color
+      if vehicle.km is not None:
+        db_vehicle.km = vehicle.km
+      if vehicle.route_status is not None:
+        db_vehicle.route_status = vehicle.route_status
+      if vehicle.assignment_status is not None:
+        db_vehicle.assignment_status = vehicle.assignment_status
+        
       updated_vehicle = self.repo.update_vehicle(db_vehicle)
       return VehicleOut(
         id_vehicle=updated_vehicle.id_vehicle,
@@ -106,6 +113,7 @@ class VehicleService:
         name_model=updated_vehicle.model.name if updated_vehicle.model else None,
         name_description=updated_vehicle.description.name if updated_vehicle.description else None,
         name_brand=updated_vehicle.brand.name if updated_vehicle.brand else None
+        
       )
     return None
 

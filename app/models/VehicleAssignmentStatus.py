@@ -1,5 +1,5 @@
-import enum
+from enum import Enum as PyEnum
 
-class VehicleAssignmentStatus(enum.Enum):
+class VehicleAssignmentStatus(str, PyEnum):
     ASSIGNED = "Assigned"
     NOT_ASSIGNED = "Not Assigned"

@@ -1,5 +1,8 @@
 from pydantic import BaseModel
+from sqlalchemy import Column, Integer, String, ForeignKey, Enum
 from typing import Optional
+from app.models.vehicleRoute import vehicleRoute
+from app.models.VehicleAssignmentStatus import VehicleAssignmentStatus
 
 class VehicleBase(BaseModel):
     number_plate: str
@@ -15,8 +18,8 @@ class VehicleBase(BaseModel):
 class VehicleCreate(VehicleBase):   
     pass
 
-class VehicleUpdate(VehicleBase):
-    pass
+# class VehicleUpdate(VehicleBase):
+#     pass
 
 class VehicleOut(VehicleBase):
     id_vehicle: int
@@ -27,3 +30,10 @@ class VehicleOut(VehicleBase):
     class Config:
         from_attributes = True
     
+class VehicleUpdate(BaseModel):
+  number_plate: Optional[str] = None
+  year: Optional[int] = None
+  color: Optional[str] = None
+  km: Optional[int] = None
+  route_status: Optional[vehicleRoute] = None
+  assignment_status: Optional[VehicleAssignmentStatus] = None
