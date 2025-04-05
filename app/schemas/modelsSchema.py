@@ -14,6 +14,7 @@ class ModelUpdate(ModelBase):
 
 class ModelOut(ModelBase):
     id_model: int
+    name_brand: Optional[str] = None
 
     class Config:
         from_attributes = True

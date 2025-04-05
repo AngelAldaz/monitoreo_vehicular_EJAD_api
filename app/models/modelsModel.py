@@ -11,7 +11,7 @@ class Model(Base):
     
     id_brand_fk = Column(Integer, ForeignKey("Brand.id_brand"), nullable=False)
     
-   
     brand = relationship("Brand", back_populates="models")
-    
     descriptions = relationship("Description", back_populates="model")
+    
+ 

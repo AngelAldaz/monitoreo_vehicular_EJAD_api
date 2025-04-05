@@ -3,12 +3,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import PALABRA_SECRETA
 from app.database import create_tables
 
-from app.routers import roleRoutes
+
+from app.routers import roleRoutes, brandRoutes, modelRoutes, descriptionRoutes
 
 
 app = FastAPI()
 app.include_router(roleRoutes.router)
-
+app.include_router(brandRoutes.router)
+app.include_router(modelRoutes.router)
+app.include_router(descriptionRoutes.router)
 # Llama a la función al iniciar
 create_tables()
 
