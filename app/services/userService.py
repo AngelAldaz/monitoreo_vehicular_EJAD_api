@@ -117,13 +117,14 @@ class UserService:
     try:
       payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
       email: str = payload.get("sub")
-      if email is None:
+      user_id: int = payload.get("user_id")
+      if email is None or user_id is None:
         raise credentials_exception
-      token_data = TokenData(email=email)
+      token_data = TokenData(email=email, user_id=user_id)
     except JWTError:
       raise credentials_exception
     
-    user = self.repo.get_user_by_email(token_data.email)
+    user = self.repo.get_user_by_id(token_data.user_id)
     if user is None:
       raise credentials_exception
     return user

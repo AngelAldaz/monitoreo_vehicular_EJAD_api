@@ -3,6 +3,9 @@ from app.models.vehiclesModel import Vehicle
 from app.models.modelsModel import Model
 from app.models.brandsModel import Brand
 from app.models.descriptionsModel import Description
+from app.models.routesModel import Route
+from app.models.fuelStopsModel import FuelStop
+from app.models.usersModel import User
 
 
 class VehicleRepository:
@@ -34,4 +37,34 @@ class VehicleRepository:
     self.db.delete(vehicle)
     self.db.commit()
     return True
+
+  def get_vehicle_report_data(self, vehicle_id: int) -> tuple:
+    """
+    Get a vehicle with all its routes and fuel stops for a report
+    
+    Args:
+        vehicle_id: The ID of the vehicle to report on
+        
+    Returns:
+        Tuple containing (vehicle, routes, fuel_stops_by_route)
+    """
+    vehicle = self.get_vehicle_by_id(vehicle_id)
+    if not vehicle:
+        return None, [], {}
+    
+    # Get all routes for this vehicle with relationships loaded
+    routes = self.db.query(Route).options(
+        joinedload(Route.user),
+        joinedload(Route.vehicle)
+    ).filter(Route.id_vehicle_fk == vehicle_id).all()
+    
+    # Get all fuel stops for each route with route relationship loaded
+    fuel_stops_by_route = {}
+    for route in routes:
+        fuel_stops = self.db.query(FuelStop).options(
+            joinedload(FuelStop.route)
+        ).filter(FuelStop.id_route_fk == route.id_route).all()
+        fuel_stops_by_route[route.id_route] = fuel_stops
+    
+    return vehicle, routes, fuel_stops_by_route
     

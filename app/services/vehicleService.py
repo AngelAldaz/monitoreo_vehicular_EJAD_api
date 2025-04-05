@@ -2,6 +2,10 @@ from typing import Optional
 from app.schemas.vehiclesSchema import VehicleCreate, VehicleOut, VehicleUpdate
 from app.repositories.vehicleRepository import VehicleRepository
 from app.models.vehiclesModel import Vehicle
+from app.utils.excelUtil import ExcelGenerator
+from fastapi import HTTPException
+from io import BytesIO
+from app.schemas.routesSchema import RouteOut
 
 class VehicleService:
   def __init__(self, vehicle_repo: VehicleRepository) -> None:
@@ -122,6 +126,71 @@ class VehicleService:
     if db_vehicle is not None:
       return self.repo.delete_vehicle(db_vehicle)
     return False
+
+  def generate_vehicle_excel_report(self, vehicle_id: int) -> BytesIO:
+    """
+    Generate an Excel report for a vehicle with its routes and fuel stops
+    
+    Args:
+        vehicle_id: The ID of the vehicle to report on
+        
+    Returns:
+        BytesIO object containing the Excel file
+    """
+    # Get all data needed for the report
+    vehicle, routes, fuel_stops_by_route = self.repo.get_vehicle_report_data(vehicle_id)
+    
+    if not vehicle:
+        raise HTTPException(status_code=404, detail="Vehicle not found")
+    
+    # Generate Excel report
+    excel_file = ExcelGenerator.generate_vehicle_report(
+        vehicle=vehicle,
+        routes=routes,
+        fuel_stops_by_route=fuel_stops_by_route
+    )
+    
+    return excel_file
+
+  def get_vehicle_routes(self, vehicle_id: int) -> list[RouteOut]:
+    """
+    Get all routes for a specific vehicle
+    
+    Args:
+        vehicle_id: ID of the vehicle
+        
+    Returns:
+        List of routes for the vehicle
+    """
+    _, routes, _ = self.repo.get_vehicle_report_data(vehicle_id)
+    
+    # Convert Route models to RouteOut schemas
+    return [
+      RouteOut(
+        id_route=route.id_route,
+        id_vehicle_fk=route.id_vehicle_fk,
+        id_user_fk=route.id_user_fk,
+        description=route.description,
+        latitude_start=route.latitude_start,
+        longitude_start=route.longitude_start,
+        latitude_end=route.latitude_end,
+        longitude_end=route.longitude_end,
+        start_time=route.start_time,
+        end_time=route.end_time,
+        estimated_time=route.estimated_time,
+        total_duration=route.total_duration,
+        on_time=route.on_time,
+        start_km=route.start_km,
+        end_km=route.end_km,
+        estimated_km=route.estimated_km,
+        image_start_km=route.image_start_km,
+        image_end_km=route.image_end_km,
+        on_distance=route.on_distance,
+        liters_consumed=route.liters_consumed,
+        name_vehicle=route.vehicle.number_plate if hasattr(route, 'vehicle') and route.vehicle else None,
+        name_user=route.user.first_name + " " + route.user.last_name if hasattr(route, 'user') and route.user else None
+      ) for route in routes
+    ]
     
     
     

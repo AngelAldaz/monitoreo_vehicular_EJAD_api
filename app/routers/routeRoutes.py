@@ -1,9 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Body
 from typing import List
 import app.schemas.routesSchema as routesSchema
+import app.schemas.fuelStopSchema as fuelStopSchema
 import app.services.routeService as routeService
+import app.services.fuelStopService as fuelStopService
 import app.repositories.routeRepository as routeRepository
 import app.repositories.vehicleRepository as vehicleRepository
+import app.repositories.fuelStopRepository as fuelStopRepository
 from app.database import get_db
 from sqlalchemy.orm import Session
 
@@ -18,6 +21,11 @@ def get_route_service(db: Session = Depends(get_db)):
     vehicle_repo = vehicleRepository.VehicleRepository(db)
     return routeService.RouteService(repo, vehicle_repo)
 
+def get_fuel_stop_service(db: Session = Depends(get_db)):
+    repo = fuelStopRepository.FuelStopRepository(db)
+    vehicle_repo = vehicleRepository.VehicleRepository(db)
+    route_repo = routeRepository.RouteRepository(db)
+    return fuelStopService.FuelStopService(repo, vehicle_repo, route_repo)
 
 @router.post(
     "/",
@@ -155,3 +163,30 @@ async def finish_route(
     - **image_end_km**: Path to the image of the odometer
     """
     return service.end_route(route_data)
+
+@router.get(
+    "/{route_id}/fuel-stops",
+    response_model=List[fuelStopSchema.FuelStopOut],
+    summary="Get all fuel stops for a specific route",
+    responses={
+        200: {"description": "List of fuel stops for the route"},
+        404: {"description": "Route not found"}
+    }
+)
+async def get_route_fuel_stops(
+    route_id: int,
+    route_service: routeService.RouteService = Depends(get_route_service),
+    fuel_stop_service: fuelStopService.FuelStopService = Depends(get_fuel_stop_service)
+):
+    """
+    Retrieve all fuel stops associated with a specific route.
+    
+    This endpoint returns a list of all fuel stops that occurred during a route,
+    including details such as stop times, fuel amounts, and locations.
+    """
+    route = route_service.get_route_by_id(route_id)
+    if not route:
+        raise HTTPException(status_code=404, detail="Route not found")
+    
+    # Get all fuel stops for this route using the service
+    return fuel_stop_service.get_fuel_stops_by_route_id(route_id)
