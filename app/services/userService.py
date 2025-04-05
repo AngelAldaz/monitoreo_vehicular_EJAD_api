@@ -1,7 +1,7 @@
 from typing import Optional
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
-from app.schemas.usersSchema import UserCreate, UserOut, TokenData
+from app.schemas.usersSchema import UserCreate, UserOut, TokenData, UserUpdate
 from app.repositories.userRepository import UserRepository
 from app.models.usersModel import User
 from passlib.context import CryptContext
@@ -32,6 +32,8 @@ class UserService:
       last_name=created_user.last_name,
       email=created_user.email,
       id_role_fk=created_user.id_role_fk,
+      id_vehicle_fk=db_user.id_vehicle_fk
+    
     )
     
   def get_user_by_id(self, user_id: int) -> Optional[UserOut]:
@@ -43,6 +45,7 @@ class UserService:
         last_name=db_user.last_name,
         email=db_user.email,
         id_role_fk=db_user.id_role_fk,
+        id_vehicle_fk=db_user.id_vehicle_fk
       )
   
   def get_all_users(self) -> list[UserOut]:
@@ -54,17 +57,25 @@ class UserService:
         last_name=user.last_name,
         email=user.email,
         id_role_fk=user.id_role_fk,
+        id_vehicle_fk=user.id_vehicle_fk
       ) for user in db_users
     ]
   
-  def update_user(self, user_id: int, user: UserCreate) -> Optional[UserOut]:
+  def update_user(self, user_id: int, user: UserUpdate) -> Optional[UserOut]:
     db_user = self.repo.get_user_by_id(user_id)
     if db_user:
-      db_user.first_name = user.first_name
-      db_user.last_name = user.last_name
-      db_user.email = user.email
-      db_user.password = pwd_context.hash(user.password)
-      db_user.id_role_fk = user.id_role_fk
+      if user.first_name is not None:
+        db_user.first_name = user.first_name
+      if user.last_name is not None:
+        db_user.last_name = user.last_name
+      if user.email is not None:
+        db_user.email = user.email
+      if user.password is not None:
+        db_user.password = pwd_context.hash(user.password)
+      if user.id_role_fk is not None:
+        db_user.id_role_fk = user.id_role_fk
+      if user.id_vehicle_fk is not None:
+        db_user.id_vehicle_fk = user.id_vehicle_fk
       updated_user = self.repo.update_user(db_user)
       return UserOut(
         id_usuario=updated_user.id_usuario,
@@ -72,6 +83,7 @@ class UserService:
         last_name=updated_user.last_name,
         email=updated_user.email,
         id_role_fk=updated_user.id_role_fk,
+        id_vehicle_fk=updated_user.id_vehicle_fk
       )
   
   def delete_user(self, user_id: int) -> bool:

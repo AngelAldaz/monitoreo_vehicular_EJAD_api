@@ -124,3 +124,34 @@ async def start_route(
     This will also change the vehicle's status to ON_ROUTE.
     """
     return service.start_route(route_data)
+
+@router.post(
+    "/finish",
+    response_model=routesSchema.RouteEndResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Finish a route",
+    response_description="The finished route"
+)
+async def finish_route(
+    route_data: routesSchema.RouteEndSchema = Body(..., example={
+        "id_vehicle_fk": 1, 
+        "id_user_fk": 1, 
+        "latitude_end": 12.345678, 
+        "longitude_end": 98.765432, 
+        "end_time": "2023-01-01T08:00:00Z", 
+        "end_km": 10000, 
+        "image_end_km": "path/to/image.jpg"
+    }),
+    service: routeService.RouteService = Depends(get_route_service)
+):
+    """
+    Finish a route with the following details:
+    - **id_vehicle_fk**: ID of the vehicle
+    - **id_user_fk**: ID of the user (driver)
+    - **latitude_end**: Ending latitude
+    - **longitude_end**: Ending longitude
+    - **end_time**: Time when the route ends
+    - **end_km**: Current vehicle odometer reading
+    - **image_end_km**: Path to the image of the odometer
+    """
+    return service.end_route(route_data)

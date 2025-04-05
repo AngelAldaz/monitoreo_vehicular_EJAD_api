@@ -33,7 +33,6 @@ class RouteRepository:
         self.db.merge(route)
         self.db.commit()
         self.db.refresh(route)
-        self.db.refresh(route, attribute_names=["vehicle", "user"])
         return route
     
     def delete_route(self, route: Route) -> bool:

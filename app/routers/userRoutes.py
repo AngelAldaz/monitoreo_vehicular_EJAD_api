@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Body
 from typing import List
 from sqlalchemy.orm import Session
-from app.schemas.usersSchema import UserCreate, UserOut, UserLogin, Token
+from app.schemas.usersSchema import UserCreate, UserOut, UserLogin, Token, UserUpdate
 from app.services.userService import UserService
 from app.repositories.userRepository import UserRepository
 from app.database import get_db
@@ -91,7 +91,7 @@ async def list_users(
 )
 async def update_user(
     user_id: int,
-    user_data: UserCreate = Body(...),
+    user_data: UserUpdate = Body(...),
     service: UserService = Depends(get_user_service)
 ):
     """

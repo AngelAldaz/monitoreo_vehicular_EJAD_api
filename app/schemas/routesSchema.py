@@ -48,6 +48,17 @@ class RouteStartSchema(BaseModel):
     image_start_km: str
     description: str = "Route in progress"
     
+class RouteEndSchema(BaseModel):
+    id_route: int
+    id_vehicle_fk: int
+    id_user_fk: int
+    latitude_end: Union[str, float]
+    longitude_end: Union[str, float]
+    end_time: datetime
+    end_km: int
+    image_end_km: str
+    description: str = "Route in progress"
+    
 class RouteStartResponse(BaseModel):
     id_route: int
     id_vehicle_fk: int
@@ -64,5 +75,15 @@ class RouteStartResponse(BaseModel):
     class Config:
         from_attributes = True
         
-
+class RouteEndResponse(RouteStartResponse):
+    latitude_end: str
+    longitude_end: str
+    end_time: datetime
+    end_km: int
+    image_end_km: str
+    route_status: str
+    
+    class Config:
+        from_attributes = True
+        
 

@@ -26,3 +26,11 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: str | None = None
+    
+class UserUpdate(BaseModel):
+  first_name: Optional[str] = None
+  last_name: Optional[str] = None
+  email: Optional[EmailStr] = None
+  password: Optional[str] = None
+  id_role_fk: Optional[int] = None
+  id_vehicle_fk: Optional[int] = None
