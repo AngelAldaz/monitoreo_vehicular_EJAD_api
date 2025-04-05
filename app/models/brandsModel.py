@@ -9,3 +9,4 @@ class Brand(Base):
     name = Column(String(50), nullable=False)
     
     models = relationship("Model", back_populates="brand")
+    vehicles = relationship("Vehicle", back_populates="brand")

@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from app.database import Base
-from app.models.modelsModel import Model
 
 
 class Description(Base):
@@ -13,3 +12,4 @@ class Description(Base):
     id_model_fk = Column(Integer, ForeignKey("Model.id_model"), nullable=False)
     
     model = relationship("Model", back_populates="descriptions")
+    vehicles = relationship("Vehicle", back_populates="description")
