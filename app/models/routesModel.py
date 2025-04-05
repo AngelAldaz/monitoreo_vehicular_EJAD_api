@@ -33,6 +33,7 @@ class Route(Base):
     
     vehicle = relationship("Vehicle", back_populates="routes")
     user = relationship("User", back_populates="routes")
+    fuel_stops = relationship("FuelStop", back_populates="route")
     
 
     
