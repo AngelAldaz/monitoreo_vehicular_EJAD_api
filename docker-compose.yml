@@ -54,37 +54,37 @@ services:
       - "8000:8000"
     env_file:
       - .env
-    depends_on:
-      - db
+    # depends_on:
+    #   - db
     restart: unless-stopped
     volumes:
       - ./app:/app/app  # Monta el código como volumen para desarrollo
 
-  db:
-    image: mysql:8.0
-    env_file:
-      - .env
-    environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    restart: unless-stopped
+  # db:
+  #   image: mysql:8.0
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+  #     - MYSQL_DATABASE=${MYSQL_DATABASE}
+  #     - MYSQL_USER=${MYSQL_USER}
+  #     - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+  #   ports:
+  #     - "3306:3306"
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #   restart: unless-stopped
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    depends_on:
-      - db
-    ports:
-      - "8080:80"
-    environment:
-      - PMA_HOST=db
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-    restart: unless-stopped
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin
+  #   depends_on:
+  #     - db
+  #   ports:
+  #     - "8080:80"
+  #   environment:
+  #     - PMA_HOST=db
+  #     - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+  #   restart: unless-stopped
 
   ollama:
     build:
@@ -98,5 +98,5 @@ services:
     restart: unless-stopped
 
 volumes:
-  mysql_data:
+  # mysql_data:
   ollama-data:
